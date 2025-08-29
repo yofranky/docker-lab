@@ -1,0 +1,17 @@
+name: Build Webserver Image
+
+on:
+  push:
+    paths:
+      - 'webserver/**'
+      - '.github/workflows/docker-build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t my-webserver:latest ./webserver
