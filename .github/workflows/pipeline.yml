@@ -1,0 +1,31 @@
+name: Lab Webserver CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build lab-webserver image
+      run: |
+        cd webserver
+        docker build -t lab-webserver .
+
+    - name: Run container
+      run: |
+        docker run -d --name webserver -p 8080:80 lab-webserver
+        sleep 5
+
+    - name: Test webserver
+      run: |
+        curl -f http://localhost:8080 | grep "Hello"
